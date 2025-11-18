@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+name: clockworkpi-fedora-bootc
+
+description: A Fedora Bootc base image for ClockworkPi devices.
+
+base-image: quay.io/fedora/fedora-iot
+image-version: 43-aarch64
+
+modules:
+  - type: dnf
+    remove:
+      packages:
+        - kernel
+        - kernel-core
+        - kernel-modules
+        - kernel-modules-core
+        - kernel-modules-extra
+
+        - atheros-firmware
+        - iwlwifi-mvm-firmware
+        - realtek-firmware
+
+        - greenboot
+        - greenboot-default-health-checks
+
+  - type: dnf
+    repos:
+      copr:
+        - davidvfx07/clockworkpi-fedora
+
+    install:
+      allow-erasing: true
+      packages:
+        - clockworkpi-fedora-kernel
+        - clockworkpi-fedora-kernel-core
+        - clockworkpi-fedora-kernel-modules
+        - clockworkpi-fedora-kernel-modules-core
+        - clockworkpi-fedora-kernel-modules-extra
+        - clockworkpi-fedora-kernel-modules-internal
+
+        - i2c-tools
+        - libgpiod-utils
+        
+        - ncurses
+        - ncurses-libs
+        - git
+        - nano
+        - htop
+        - socat
+
+        - distrobox
+        - podman
+
+        - upower
+        - tuned
+        - brightnessctl
+
+  - type: signing
