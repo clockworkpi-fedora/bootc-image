@@ -1,0 +1,90 @@
+modules:
+  - type: dnf
+    remove:
+      packages:
+        - kernel
+        - kernel-core
+        - kernel-modules
+        - kernel-modules-core
+
+        - atheros-firmware
+        - iwlwifi-mvm-firmware
+        - realtek-firmware
+
+        - greenboot
+        - greenboot-default-health-checks
+
+  - type: dnf
+    repos:
+      copr:
+        - davidvfx07/clockworkpi-fedora
+
+    install:
+      allow-erasing: true
+      packages:
+        - cf-kernel
+        - cf-kernel-core
+        - cf-kernel-modules
+        - cf-kernel-modules-core
+        - cf-kernel-modules-extra
+
+        # Custom packages for hardware control
+        - cf-cellctl
+
+        # Basic hardware control utils
+        - libgpiod-utils
+        - upower
+        - tuned
+        - brightnessctl
+        - socat
+
+        # axp-poweroff requirements
+        - i2c-tools
+
+        # Initial setup requirements
+        - cloud-utils-growpart
+        - newt
+        - parted
+
+        # Basic assumed packages in standard Fedora
+        - ncurses
+        - ncurses-libs
+        - git
+        - nano
+        - vim
+        - htop
+
+        # Atomic Fedora tools
+        - toolbox
+        - distrobox
+        - podman
+
+  - type: files
+    files:
+      - source: axp-poweroff/axp-poweroff.sh
+        destination: /usr/libexec/
+      - source: axp-poweroff/axp-poweroff.service
+        destination: /lib/systemd/system/
+
+      - source: setup-oobe/setup-oobe.sh
+        destination: /usr/libexec/
+      - source: setup-oobe/setup-oobe.service
+        destination: /lib/systemd/system/
+
+  - type: systemd
+    system:
+      enabled:
+        - axp-poweroff.service
+        - setup-oobe.service
+
+  # TEMPORARY
+  # - type: script
+  #   snippets:
+  #     - "echo 'root:pass' | chpasswd"
+  #     - "echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config"
+
+  - type: kargs
+    kargs:
+      - "quiet"
+      - "loglevel=3"
+

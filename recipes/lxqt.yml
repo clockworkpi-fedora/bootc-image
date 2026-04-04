@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+name: clockworkpi-fedora-lxqt
+
+description: An Atomic Fedora LXQT image for ClockworkPi devices.
+
+base-image: quay.io/fedora/fedora-iot
+image-version: 43-aarch64
+
+modules:
+  - from-file: common.yml
+  
+  - type: dnf
+    group-install:   
+      packages:
+        - lxqt-desktop
+
+    install:
+      packages:
+        - python3
+
+
+  - type: default-flatpaks
+    configurations:
+      - notify: false
+        scope: system
+        install:
+          - org.mozilla.firefox
+          - org.libreoffice.LibreOffice
+
+  - type: signing

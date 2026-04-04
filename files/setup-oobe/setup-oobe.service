@@ -1,0 +1,16 @@
+[Unit]
+Description==ClockworkPi First Boot Setup (OOBE)
+After=local-fs.target network-online.target systemd-user-sessions.service plymouth-quit-wait.service
+Before=display-manager.service getty@tty1.service
+Conflicts=getty@tty1.service plymouth-quit.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/openvt -c 1 -w -f -s -- bash /usr/libexec/setup-oobe.sh
+
+Environment=TERM=linux
+
+ExecStartPre=-/usr/bin/plymouth quit
+
+[Install]
+WantedBy=multi-user.target
